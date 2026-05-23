@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mirande Systems — Software, Forged Sharp.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #000000;
+    --muted: #6b6b6b;
+    --hairline: rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Archivo', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--fg); color: var(--bg); }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ============== LOGO MARK ============== */
+  .mark { display: inline-block; line-height: 0; }
+  .mark svg { display: block; }
+  .mark svg path { fill: currentColor; }
+
+  /* ============== NAV ============== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--fg);
+  }
+  nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  nav .brand .mark { color: var(--fg); }
+  nav .brand .wordmark {
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  nav ul {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  nav ul a {
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+    transition: opacity 0.2s ease;
+  }
+  nav ul a:hover { opacity: 0.4; }
+  nav .cta {
+    background: var(--fg);
+    color: var(--bg);
+    padding: 11px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--fg);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  nav .cta:hover { background: var(--bg); color: var(--fg); }
+
+  /* ============== HERO ============== */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .hero-top .label { color: var(--muted); }
+  .hero-mark-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    width: 70vmin;
+    height: 70vmin;
+    color: var(--fg);
+    opacity: 0.05;
+    pointer-events: none;
+  }
+  .hero-mark-bg svg { width: 100%; height: 100%; }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-headline {
+    font-size: clamp(56px, 13vw, 200px);
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.055em;
+    margin: 60px 0 40px;
+    text-transform: uppercase;
+  }
+  .hero-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    border-top: 2px solid var(--fg);
+    padding-top: 28px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-desc {
+    font-size: 17px;
+    max-width: 460px;
+    line-height: 1.45;
+    font-weight: 500;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 50px;
+    justify-self: end;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .stat-label { color: var(--muted); margin-top: 6px; }
+
+  /* ============== MARQUEE ============== */
+  .marquee {
+    border-top: 1px solid var(--fg);
+    border-bottom: 1px solid var(--fg);
+    overflow: hidden;
+    padding: 18px 0;
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 50px;
+    white-space: nowrap;
+    animation: scroll 28s linear infinite;
+    align-items: center;
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 50px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .marquee-item .mark { color: var(--bg); }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ============== SECTIONS ============== */
+  .section {
+    padding: 120px 40px;
+    border-bottom: 1px solid var(--fg);
+    position: relative;
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    margin-bottom: 80px;
+    align-items: start;
+  }
+  .section-title {
+    font-size: clamp(40px, 6.5vw, 88px);
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+  .section-label { padding-top: 8px; }
+  .section-label .num {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+  .section-label .tag { color: var(--muted); margin-top: 6px; }
+
+  /* ============== PRODUCTS ============== */
+  .product {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    gap: 40px;
+    padding: 56px 0;
+    border-top: 1px solid var(--fg);
+    align-items: start;
+    cursor: pointer;
+    position: relative;
+    transition: padding 0.4s ease;
+  }
+  .product:last-child { border-bottom: 1px solid var(--fg); }
+  .product:hover { padding-left: 24px; }
+  .product:hover .product-arrow { transform: translateX(12px); }
+  .product-id { padding-top: 8px; display: flex; flex-direction: column; gap: 10px; }
+  .product-id .mark { color: var(--fg); }
+  .product-name {
+    font-size: clamp(44px, 6.5vw, 80px);
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  .product-tagline {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 12px;
+    color: var(--muted);
+    letter-spacing: -0.01em;
+  }
+  .product-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 12px;
+  }
+  .product-meta p { font-size: 15px; line-height: 1.55; font-weight: 500; }
+  .product-platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .product-platforms span {
+    border: 1px solid var(--fg);
+    padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .product-arrow {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    transition: transform 0.3s ease;
+  }
+
+  /* ============== FOUNDER ============== */
+  .founder {
+    padding: 140px 40px;
+    background: var(--fg);
+    color: var(--bg);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--fg);
+  }
+  .founder-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 60px;
+    align-items: start;
+    position: relative;
+    z-index: 2;
+  }
+  .founder-content .label { color: #888; margin-bottom: 28px; }
+  .founder-name {
+    font-size: clamp(52px, 9vw, 130px);
+    font-weight: 900;
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+  .founder-bio { font-size: 17px; line-height: 1.6; max-width: 540px; color: #b5b5b5; font-weight: 500; }
+  .founder-signature {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid #2a2a2a;
+    max-width: 540px;
+  }
+  .founder-signature .sig-label { color: #888; margin-bottom: 8px; }
+  .founder-signature .sig-name {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .founder-signature .sig-role { color: #888; }
+  .founder-mark-bg {
+    position: absolute;
+    bottom: -120px;
+    right: -80px;
+    width: 600px;
+    height: 600px;
+    color: #ffffff;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .founder-mark-bg svg { width: 100%; height: 100%; }
+
+  /* ============== MANIFESTO ============== */
+  .manifesto {
+    padding: 140px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--fg);
+    position: relative;
+    overflow: hidden;
+  }
+  .manifesto p {
+    font-size: clamp(36px, 5.5vw, 76px);
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+  .manifesto .divider-marks {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .manifesto .divider-marks .mark { color: var(--fg); }
+
+  /* ============== CONTACT ============== */
+  .contact {
+    padding: 120px 40px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    border-bottom: 1px solid var(--fg);
+  }
+  .contact h2 {
+    font-size: clamp(56px, 9vw, 140px);
+    font-weight: 900;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    text-transform: uppercase;
+  }
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    justify-content: flex-end;
+  }
+  .contact-right a {
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    border-bottom: 2px solid var(--fg);
+    padding-bottom: 10px;
+    transition: padding 0.3s ease;
+  }
+  .contact-right a:hover { padding-left: 14px; }
+
+  /* ============== FOOTER ============== */
+  footer {
+    padding: 30px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    gap: 20px;
+  }
+  footer .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  footer .footer-brand .mark { color: var(--fg); }
+  footer .copy { font-size: 11px; }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    nav ul { display: none; }
+    .hero { padding: 110px 20px 40px; }
+    .hero-bottom { grid-template-columns: 1fr; gap: 30px; }
+    .hero-stats { justify-self: start; }
+    .section, .founder, .manifesto, .contact { padding: 80px 20px; }
+    .section-head, .product, .founder-grid, .contact { grid-template-columns: 1fr; gap: 30px; }
+    .product { padding: 40px 0; }
+    .founder-mark-bg { width: 360px; height: 360px; bottom: -60px; right: -40px; }
+    footer { flex-direction: column; gap: 14px; padding: 24px 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== INLINE LOGO MARK (used everywhere via <use>) ============== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="m-mark" viewBox="0 0 200 200">
+      <path d="M 20 25 L 180 25 L 180 150 L 140 150 L 140 65 L 100 195 L 60 65 L 60 150 L 20 150 Z" />
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============== NAV ============== -->
+<nav>
+  <div class="brand">
+    <span class="mark"><svg width="22" height="22"><use href="#m-mark"/></svg></span>
+    <span class="wordmark">MIRANDE SYSTEMS</span>
+  </div>
+  <ul>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#story">Story</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="cta">Get In Touch</button>
+</nav>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="hero-mark-bg">
+    <svg><use href="#m-mark"/></svg>
+  </div>
+
+  <div class="hero-top">
+    <div class="mono label">[ EST. 2025 / SOFTWARE STUDIO ]</div>
+    <div class="mono label">003 PRODUCTS / 001 MISSION</div>
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-headline">Software,<br>Forged Sharp.</h1>
+  </div>
+
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      Mirande Systems builds opinionated software for people who refuse to settle for bloated, broken tools. Three products. Zero compromise.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">03</div>
+        <div class="mono stat-label">Products</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">01</div>
+        <div class="mono stat-label">Mission</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== MARQUEE ============== -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANCHORED</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANVIL</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> FREETIME</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> BUILT WITH INTENT</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANCHORED</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANVIL</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> FREETIME</div>
+    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> BUILT WITH INTENT</div>
+  </div>
+</div>
+
+<!-- ============== PRODUCTS ============== -->
+<section class="section" id="products">
+  <div class="section-head">
+    <div class="section-label">
+      <div class="num">01</div>
+      <div class="mono tag">/ Products</div>
+    </div>
+    <h2 class="section-title">Three tools. Each built to replace something broken.</h2>
+  </div>
+
+  <!-- ANCHORED -->
+  <div class="product">
+    <div class="product-id">
+      <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
+      <div class="mono">001 / IOS · WATCHOS</div>
+    </div>
+    <div>
+      <h3 class="product-name">Anchored.</h3>
+      <p class="product-tagline">Habits that hold.</p>
+    </div>
+    <div class="product-meta">
+      <p>A habit tracker for iOS and Apple Watch designed for people who actually want to change. No streak-shaming, no gamified nonsense — just rituals you can stick to.</p>
+      <div class="product-platforms">
+        <span>iOS</span>
+        <span>Apple Watch</span>
+        <span>SwiftUI</span>
+      </div>
+      <div class="product-arrow">→</div>
+    </div>
+  </div>
+
+  <!-- ANVIL -->
+  <div class="product">
+    <div class="product-id">
+      <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
+      <div class="mono">002 / SAAS · MSP</div>
+    </div>
+    <div>
+      <h3 class="product-name">Anvil.</h3>
+      <p class="product-tagline">The PSA that doesn't fight you.</p>
+    </div>
+    <div class="product-meta">
+      <p>A modern replacement for ConnectWise CPQ and PSA. Built for MSPs tired of paying premium for legacy software. Quotes, tickets, projects — finally usable.</p>
+      <div class="product-platforms">
+        <span>Web App</span>
+        <span>CPQ</span>
+        <span>PSA</span>
+        <span>MSP</span>
+      </div>
+      <div class="product-arrow">→</div>
+    </div>
+  </div>
+
+  <!-- FREETIME -->
+  <div class="product">
+    <div class="product-id">
+      <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
+      <div class="mono">003 / SAAS · TRADES</div>
+    </div>
+    <div>
+      <h3 class="product-name">FreeTime.</h3>
+      <p class="product-tagline">Fill the gaps. Skip the calls.</p>
+    </div>
+    <div class="product-meta">
+      <p>An online schedule filler built for interior contractors with open slots in their week. Customers book the gaps. You keep working. No more dead hours on the calendar.</p>
+      <div class="product-platforms">
+        <span>Web App</span>
+        <span>Scheduling</span>
+        <span>Trades</span>
+      </div>
+      <div class="product-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== STORY ============== -->
+<section class="founder" id="story">
+  <div class="founder-mark-bg">
+    <svg><use href="#m-mark"/></svg>
+  </div>
+  <div class="founder-grid">
+    <div class="section-label">
+      <div class="num" style="color: #fff;">02</div>
+      <div class="mono tag" style="color: #888;">/ Our Story</div>
+    </div>
+    <div class="founder-content">
+      <h2 class="founder-name">Built by people<br>who have to<br>use it.</h2>
+      <p class="founder-bio">
+        Mirande Systems started where most good software does — with a problem nobody else was bothering to fix. The tools we relied on every day were bloated, slow, and built for an era that's already over.
+        <br><br>
+        So we started building replacements. Tools sharp enough for the people who actually do the work. No bloat. No quarterly-roadmap theater. Just software that earns its place on your screen.
+      </p>
+      <div class="founder-signature">
+        <div class="mono sig-label">Founded by</div>
+        <div class="sig-name">Daniel Mirande</div>
+        <div class="mono sig-role">Founder &nbsp;//&nbsp; CEO</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== MANIFESTO ============== -->
+<section class="manifesto">
+  <div class="divider-marks">
+    <span class="mark"><svg width="14" height="14"><use href="#m-mark"/></svg></span>
+    <span class="mark"><svg width="14" height="14"><use href="#m-mark"/></svg></span>
+    <span class="mark"><svg width="14" height="14"><use href="#m-mark"/></svg></span>
+  </div>
+  <p>We don't chase trends. We build tools that last.</p>
+</section>
+
+<!-- ============== CONTACT ============== -->
+<section class="contact" id="contact">
+  <h2>Let's talk.</h2>
+  <div class="contact-right">
+    <a href="mailto:hello@mirandesystems.com">hello@mirandesystems.com →</a>
+    <a href="#">Partnerships →</a>
+    <a href="#">Press →</a>
+    <a href="#">Careers →</a>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="footer-brand">
+    <span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span>
+    <span class="mono">© 2026 MIRANDE SYSTEMS / ALL RIGHTS RESERVED</span>
+  </div>
+  <div class="mono copy">BUILT IN IOWA</div>
+</footer>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Mirande Systems — Landing Page
 
-The official landing page for [Mirande Systems](https://miradesystems.com) — *Software, Forged Sharp.*
+The official landing page for [Mirande Systems](https://www.mirandesystems.com) — *Software, Forged Sharp.*
 
 ## Stack
 

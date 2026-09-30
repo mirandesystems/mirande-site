@@ -225,6 +225,7 @@
     transition: padding 0.4s ease;
   }
   .product:last-child { border-bottom: 1px solid var(--fg); }
+  a.product { color: inherit; text-decoration: none; }
   .product:hover { padding-left: 24px; }
   .product:hover .product-arrow { transform: translateX(12px); }
   .product-id { padding-top: 8px; display: flex; flex-direction: column; gap: 10px; }
@@ -499,7 +500,7 @@
   </div>
 
   <!-- ANCHORED -->
-  <div class="product">
+  <a class="product" href="/anchored/">
     <div class="product-id">
       <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
       <div class="mono">001 / IOS · WATCHOS</div>
@@ -517,7 +518,7 @@
       </div>
       <div class="product-arrow">→</div>
     </div>
-  </div>
+  </a>
 
   <!-- ANVIL -->
   <div class="product">

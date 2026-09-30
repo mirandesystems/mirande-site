@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anchored — Support</title>
+<meta name="description" content="Help for Anchored, the Apple Watch routine coach.">
+<link rel="icon" href="/anchored/assets/favicon.svg" type="image/svg+xml">
+<style>
+  :root { --paper:#F1ECE0; --surface:#FBF8F0; --ink:#18191C; --spark:#FF6A3D; --muted:#6F6A60; --hairline:#E7DFCD; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; line-height:1.6; }
+  main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
+  h1 { font-size: 2rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+  h3 { font-size: 1rem; margin: 22px 0 4px; }
+  .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; }
+  .card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px; padding: 18px 20px; margin: 20px 0; }
+  .card p { margin: 0; }
+  .card p + p { margin-top: 8px; }
+  a { color: var(--ink); }
+  nav { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; }
+  nav a { color: var(--ink); text-decoration: none; margin-right: 14px; }
+  ol { padding-left: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <nav><a href="/anchored/">Anchored</a><a href="/anchored/privacy">Privacy</a><a href="/anchored/terms">Terms</a><a href="/anchored/support">Support</a></nav>
+  <h1>Anchored — Support</h1>
+  <p class="meta">Mirande Systems LLC</p>
+
+  <div class="card">
+    <p>Questions, bugs, ideas: <a href="mailto:support@mirandesystems.com">support@mirandesystems.com</a>.
+    We answer every message.</p>
+    <p>In the app, <strong>About Anchored</strong> → <strong>Send feedback</strong> starts the email for you, with your app and iOS versions filled in.</p>
+  </div>
+
+  <h2>Requirements</h2>
+  <p>Anchored needs an <strong>iPhone (iOS 17.6 or later)</strong> paired with an <strong>Apple Watch (watchOS 10.6 or later)</strong>.
+  You build routines on the iPhone, and the Watch runs them. Without a Watch, routines can't be run.</p>
+
+  <h2>Getting set up</h2>
+
+  <h3 id="install">How do I install the Watch app?</h3>
+  <p>It often installs on its own. If it isn't on your Watch yet:</p>
+  <ol>
+    <li>On your iPhone, open the <strong>Watch</strong> app.</li>
+    <li>Scroll to <strong>Available Apps</strong> and tap <strong>Install</strong> next to Anchored.</li>
+  </ol>
+  <p>You can also open the App Store on your Watch and search for Anchored.</p>
+
+  <h3 id="sync">My routine doesn't show up on the Watch.</h3>
+  <p>Open Anchored on your Watch after saving the routine on your iPhone. Keep the two devices near each other the first time.
+  If it still doesn't appear, open Anchored on your iPhone again. It sends everything to the Watch each time it opens.</p>
+
+  <h3 id="short-version">Where is the Short version?</h3>
+  <p>The Short version runs only the steps that can't be skipped. It's for busy days, and it still counts.</p>
+  <ol>
+    <li>On your iPhone, open the routine and tap a step you always do.</li>
+    <li>Turn off <strong>Allow skipping</strong>. Leave it on for the steps that are nice to have.</li>
+    <li>Save the routine.</li>
+  </ol>
+  <p>On your Watch, the routine's Start screen then shows a <strong>Short</strong> button with its length, just below <strong>Start</strong>.
+  It appears only when some steps can be skipped and some can't. New steps start with Allow skipping on,
+  so a routine built from scratch has no Short version until you change one. The templates come set up this way.
+  On the iPhone, the note under the steps shows the Short version's length, or what to change to get one.</p>
+
+  <h2>During a routine</h2>
+
+  <h3 id="taps">What do the taps mean?</h3>
+  <p>You feel a tap when a routine starts and each time it moves to the next step.
+  A heads-up tap comes about 10 seconds before a step ends (on steps of 20 seconds or more).
+  If a step is set to <strong>Wait for me to tap Done</strong>, its timer stops at 0:00 and waits, with a gentle tap each minute, up to three.
+  To make the step-change tap lighter or firmer, open the routine on your iPhone and pick Soft, Medium or Strong under <strong>Haptics</strong>.</p>
+
+  <h3 id="controls">How do I pause, skip or stop early?</h3>
+  <p>Swipe up on the step screen. You'll find <strong>Pause</strong>, <strong>Done early</strong>, <strong>Skip</strong> (on steps that allow skipping)
+  and, once you've finished a step, <strong>Finish and save</strong>. Finish and save ends the routine and keeps the steps you did. It still counts.
+  <strong>Stop without saving</strong> ends it without logging anything.</p>
+  <p>On watchOS 11 or later, Double Tap presses the button on the step screen (Done early, Done or Resume).
+  It works on Apple Watch Series 9 and later, Ultra 2 and later, and SE 3.</p>
+
+  <h3 id="wrist-down">I don't feel the taps when my wrist is down.</h3>
+  <p>While a routine runs, Anchored stays active for up to an hour, so it can tap you with the screen off.
+  If you press the Digital Crown, switch apps, or the routine runs past an hour, the remaining step changes arrive as notifications instead (without the 10-second heads-up).
+  Make sure notifications are allowed for Anchored on your Watch. Anchored asks the first time you open it there,
+  and a routine's Start screen tells you if they're off.</p>
+
+  <h3 id="crown">Should I press the Digital Crown during a routine?</h3>
+  <p>Better not. While Anchored is on screen (even with the screen off), it taps you itself. If you press the Crown or open another app,
+  the remaining step changes arrive as notifications. They're on time as long as notifications are allowed and a Focus isn't silencing them.
+  Open Anchored again and it catches up to where your routine is.</p>
+
+  <h2>Reminders, watch face and streaks</h2>
+
+  <h3 id="reminders">How do reminders work?</h3>
+  <p>On your iPhone, open the routine, turn on <strong>Scheduled reminder</strong> and pick a time. Choose the days under <strong>Runs on</strong>.
+  The reminder rings on your Watch at that time on those days. It shows the routine's name, your anchor (like “After I pour coffee”) and how long it takes.</p>
+  <p>Tap the reminder, or tap <strong>Open</strong>, to go straight to that routine's Start screen. <strong>Snooze 10 min</strong> asks again in 10 minutes.
+  After you change a reminder, open Anchored on your Watch once.</p>
+
+  <h3 id="watch-face">How do I put Anchored on my watch face?</h3>
+  <ol>
+    <li>On your Watch, touch and hold the watch face, then tap <strong>Edit</strong>.</li>
+    <li>Swipe to <strong>Complications</strong> and tap the slot you want.</li>
+    <li>Choose <strong>Anchored</strong>.</li>
+    <li>Press the Digital Crown to save, then tap the face.</li>
+  </ol>
+  <p>For the Smart Stack, turn the Digital Crown (or swipe up) on the watch face. Touch and hold the stack (or tap <strong>Edit</strong>),
+  tap <strong>+</strong>, then choose Anchored.</p>
+  <p>It shows your next routine, and its reminder time if it has one (with the day if it's a day or more away).
+  After a run it moves on to your next routine. Once every routine with a reminder time is done for the day, it says <strong>Done today</strong>.
+  If it says <strong>Open Anchored</strong>, open the app on your Watch once. Tap it to open that routine, ready to start.</p>
+
+  <h3 id="streaks">How do streaks work?</h3>
+  <p>A streak counts only the days you picked under <strong>Runs on</strong>. Miss one and it waits for you. Miss two in a row and it starts over.
+  Every saved run counts, including the Short version and a run ended with Finish and save.
+  Your day ends at 4 a.m., so a run just after midnight counts for the day before.
+  Turn on <strong>Streak goal</strong> to set a number of days to aim for.</p>
+
+  <h2>Purchases</h2>
+
+  <h3 id="unlock">What does the one-time unlock include?</h3>
+  <p>Every Watch feature is free. The unlock adds unlimited routines and your full history.
+  The free version includes one routine and the last 7 days of history. Older runs stay saved on your iPhone and show up when you unlock.
+  It's a single purchase, not a subscription.</p>
+
+  <h3 id="restore">I bought the unlock but the app says I'm locked.</h3>
+  <p>Open Anchored on your iPhone, scroll to the bottom of <strong>Routines</strong> and tap <strong>About Anchored</strong>, then <strong>Restore purchase</strong>.
+  The unlock screen has a <strong>Restore purchase</strong> button too.
+  Make sure you're signed in to the App Store with the same Apple Account (Apple ID) you used to buy.</p>
+
+  <h3 id="refund">How do I get a refund?</h3>
+  <p>Purchases are handled by Apple. Request a refund at <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>.</p>
+
+  <h2>Your data</h2>
+
+  <h3 id="new-iphone">What happens to my routines when I get a new iPhone?</h3>
+  <p>Your routines and history move with your iPhone backup (iCloud Backup or a computer backup). Restore the backup to the new iPhone and pair your Watch.
+  Then open Anchored on the iPhone, and then on the Watch, so it picks everything up. If the unlock doesn't show, use Restore purchase as described above.</p>
+
+  <h3 id="delete">How do I delete my data?</h3>
+  <p>To remove one routine, touch and hold its card on <strong>Routines</strong> and tap <strong>Delete</strong>. Its history stays.
+  To remove one run, swipe left on it in <strong>History</strong>.</p>
+  <p>To remove everything, delete Anchored from your iPhone and your Watch. Anchored keeps your routines and history on your devices and never sends them to us.
+  Copies in your own iCloud or computer backups go away as those backups are replaced or deleted. See the <a href="/anchored/privacy">privacy policy</a>.</p>
+</main>
+</body>
+</html>

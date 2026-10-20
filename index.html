@@ -1,624 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mirande Systems LLC — Software, Forged Sharp.</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mirande Systems · Independent software studio</title>
+<meta name="description" content="Mirande Systems is an independent software studio in the US. We design, build and ship our own products: Anchored, Anvil and FreeTime.">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://www.mirandesystems.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mirande Systems">
+<meta property="og:title" content="Mirande Systems · We design, build and ship our own products">
+<meta property="og:description" content="An independent software studio in the US, with three products for iPhone, Apple Watch, Android and the web: Anchored, Anvil and FreeTime.">
+<meta property="og:url" content="https://www.mirandesystems.com/">
+<meta property="og:image" content="https://www.mirandesystems.com/assets/site/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/site/img/m.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/site/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #ffffff;
-    --fg: #000000;
-    --muted: #6b6b6b;
-    --hairline: rgba(0,0,0,0.12);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: 'Archivo', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-  ::selection { background: var(--fg); color: var(--bg); }
-  .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
-
-  /* ============== LOGO MARK ============== */
-  .mark { display: inline-block; line-height: 0; }
-  .mark svg { display: block; }
-  .mark svg path { fill: currentColor; }
-
-  /* ============== NAV ============== */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--fg);
-  }
-  nav .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  nav .brand .mark { color: var(--fg); }
-  nav .brand .wordmark {
-    font-weight: 900;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-  }
-  nav ul {
-    display: flex;
-    gap: 36px;
-    list-style: none;
-  }
-  nav ul a {
-    color: var(--fg);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0;
-    transition: opacity 0.2s ease;
-  }
-  nav ul a:hover { opacity: 0.4; }
-  nav .cta {
-    background: var(--fg);
-    color: var(--bg);
-    padding: 11px 18px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border: 1px solid var(--fg);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s ease;
-  }
-  nav .cta:hover { background: var(--bg); color: var(--fg); }
-
-  /* ============== HERO ============== */
-  .hero {
-    min-height: 100vh;
-    padding: 120px 40px 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-  }
-  .hero-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .hero-top .label { color: var(--muted); }
-  .hero-mark-bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -45%);
-    width: 70vmin;
-    height: 70vmin;
-    color: var(--fg);
-    opacity: 0.05;
-    pointer-events: none;
-  }
-  .hero-mark-bg svg { width: 100%; height: 100%; }
-  .hero-content { position: relative; z-index: 2; }
-  .hero-headline {
-    font-size: clamp(56px, 13vw, 200px);
-    font-weight: 900;
-    line-height: 0.85;
-    letter-spacing: -0.055em;
-    margin: 60px 0 40px;
-    text-transform: uppercase;
-  }
-  .hero-bottom {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: end;
-    border-top: 2px solid var(--fg);
-    padding-top: 28px;
-    position: relative;
-    z-index: 2;
-  }
-  .hero-desc {
-    font-size: 17px;
-    max-width: 460px;
-    line-height: 1.45;
-    font-weight: 500;
-  }
-  .hero-stats {
-    display: flex;
-    gap: 50px;
-    justify-self: end;
-  }
-  .stat { text-align: right; }
-  .stat-num {
-    font-size: 56px;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.04em;
-  }
-  .stat-label { color: var(--muted); margin-top: 6px; }
-
-  /* ============== MARQUEE ============== */
-  .marquee {
-    border-top: 1px solid var(--fg);
-    border-bottom: 1px solid var(--fg);
-    overflow: hidden;
-    padding: 18px 0;
-    background: var(--fg);
-    color: var(--bg);
-  }
-  .marquee-track {
-    display: flex;
-    gap: 50px;
-    white-space: nowrap;
-    animation: scroll 28s linear infinite;
-    align-items: center;
-  }
-  .marquee-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 50px;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .marquee-item .mark { color: var(--bg); }
-  @keyframes scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  /* ============== SECTIONS ============== */
-  .section {
-    padding: 120px 40px;
-    border-bottom: 1px solid var(--fg);
-    position: relative;
-  }
-  .section-head {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 40px;
-    margin-bottom: 80px;
-    align-items: start;
-  }
-  .section-title {
-    font-size: clamp(40px, 6.5vw, 88px);
-    font-weight: 900;
-    letter-spacing: -0.045em;
-    line-height: 0.92;
-    text-transform: uppercase;
-  }
-  .section-label { padding-top: 8px; }
-  .section-label .num {
-    font-size: 72px;
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.05em;
-  }
-  .section-label .tag { color: var(--muted); margin-top: 6px; }
-
-  /* ============== PRODUCTS ============== */
-  .product {
-    display: grid;
-    grid-template-columns: 220px 1fr 1fr;
-    gap: 40px;
-    padding: 56px 0;
-    border-top: 1px solid var(--fg);
-    align-items: start;
-    cursor: pointer;
-    position: relative;
-    transition: padding 0.4s ease;
-  }
-  .product:last-child { border-bottom: 1px solid var(--fg); }
-  a.product { color: inherit; text-decoration: none; }
-  .product:hover { padding-left: 24px; }
-  .product:hover .product-arrow { transform: translateX(12px); }
-  .product-id { padding-top: 8px; display: flex; flex-direction: column; gap: 10px; }
-  .product-id .mark { color: var(--fg); }
-  .product-name {
-    font-size: clamp(44px, 6.5vw, 80px);
-    font-weight: 900;
-    letter-spacing: -0.045em;
-    line-height: 0.95;
-    text-transform: uppercase;
-  }
-  .product-tagline {
-    font-size: 18px;
-    font-weight: 600;
-    margin-top: 12px;
-    color: var(--muted);
-    letter-spacing: -0.01em;
-  }
-  .product-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding-top: 12px;
-  }
-  .product-meta p { font-size: 15px; line-height: 1.55; font-weight: 500; }
-  .product-platforms {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .product-platforms span {
-    border: 1px solid var(--fg);
-    padding: 5px 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-  }
-  .product-arrow {
-    font-size: 36px;
-    font-weight: 900;
-    line-height: 1;
-    transition: transform 0.3s ease;
-  }
-
-  /* ============== FOUNDER ============== */
-  .founder {
-    padding: 140px 40px;
-    background: var(--fg);
-    color: var(--bg);
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--fg);
-  }
-  .founder-grid {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 60px;
-    align-items: start;
-    position: relative;
-    z-index: 2;
-  }
-  .founder-content .label { color: #888; margin-bottom: 28px; }
-  .founder-name {
-    font-size: clamp(52px, 9vw, 130px);
-    font-weight: 900;
-    line-height: 0.86;
-    letter-spacing: -0.05em;
-    margin-bottom: 32px;
-    text-transform: uppercase;
-  }
-  .founder-bio { font-size: 17px; line-height: 1.6; max-width: 540px; color: #b5b5b5; font-weight: 500; }
-  .founder-signature {
-    margin-top: 56px;
-    padding-top: 28px;
-    border-top: 1px solid #2a2a2a;
-    max-width: 540px;
-  }
-  .founder-signature .sig-label { color: #888; margin-bottom: 8px; }
-  .founder-signature .sig-name {
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    margin-bottom: 6px;
-  }
-  .founder-signature .sig-role { color: #888; }
-  .founder-mark-bg {
-    position: absolute;
-    bottom: -120px;
-    right: -80px;
-    width: 600px;
-    height: 600px;
-    color: #ffffff;
-    opacity: 0.04;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .founder-mark-bg svg { width: 100%; height: 100%; }
-
-  /* ============== MANIFESTO ============== */
-  .manifesto {
-    padding: 140px 40px;
-    text-align: center;
-    border-bottom: 1px solid var(--fg);
-    position: relative;
-    overflow: hidden;
-  }
-  .manifesto p {
-    font-size: clamp(36px, 5.5vw, 76px);
-    font-weight: 900;
-    letter-spacing: -0.045em;
-    line-height: 1.02;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-transform: uppercase;
-    position: relative;
-    z-index: 2;
-  }
-  .manifesto .divider-marks {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin-bottom: 40px;
-  }
-  .manifesto .divider-marks .mark { color: var(--fg); }
-
-  /* ============== CONTACT ============== */
-  .contact {
-    padding: 120px 40px 60px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    border-bottom: 1px solid var(--fg);
-  }
-  .contact h2 {
-    font-size: clamp(56px, 9vw, 140px);
-    font-weight: 900;
-    letter-spacing: -0.055em;
-    line-height: 0.86;
-    text-transform: uppercase;
-  }
-  .contact-right {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    justify-content: flex-end;
-  }
-  .contact-right a {
-    color: var(--fg);
-    text-decoration: none;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    border-bottom: 2px solid var(--fg);
-    padding-bottom: 10px;
-    transition: padding 0.3s ease;
-  }
-  .contact-right a:hover { padding-left: 14px; }
-
-  /* ============== FOOTER ============== */
-  footer {
-    padding: 30px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--muted);
-    gap: 20px;
-  }
-  footer .footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  footer .footer-brand .mark { color: var(--fg); }
-  footer .copy { font-size: 11px; }
-
-  /* ============== RESPONSIVE ============== */
-  @media (max-width: 900px) {
-    nav { padding: 14px 20px; }
-    nav ul { display: none; }
-    .hero { padding: 110px 20px 40px; }
-    .hero-bottom { grid-template-columns: 1fr; gap: 30px; }
-    .hero-stats { justify-self: start; }
-    .section, .founder, .manifesto, .contact { padding: 80px 20px; }
-    .section-head, .product, .founder-grid, .contact { grid-template-columns: 1fr; gap: 30px; }
-    .product { padding: 40px 0; }
-    .founder-mark-bg { width: 360px; height: 360px; bottom: -60px; right: -40px; }
-    footer { flex-direction: column; gap: 14px; padding: 24px 20px; text-align: center; }
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300..900;1,300..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site/lib/lenis.css">
+<link rel="stylesheet" href="/assets/site/site.css">
+<script>
+  // decide on the preloader before first paint (skip on reduced motion, repeat visits, ?nopre)
+  (function () {
+    var q = location.search, d = document.documentElement;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seen = false; try { seen = sessionStorage.getItem('ms-pre') === '1'; } catch (e) {}
+    var pre = !reduce && q.indexOf('nopre') < 0 && (!seen || q.indexOf('pre') > -1 && q.indexOf('nopre') < 0);
+    d.classList.add(pre ? 'has-pre' : 'no-pre');
+    if (reduce) d.classList.add('reduce');
+    else { d.classList.add('js-intro'); setTimeout(function () { d.classList.remove('js-intro'); }, 5000); }
+    d.classList.add('hero-orbit');
+  })();
+</script>
 </head>
 <body>
 
-<!-- ============== INLINE LOGO MARK (used everywhere via <use>) ============== -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <symbol id="m-mark" viewBox="0 0 200 200">
-      <path d="M 20 25 L 180 25 L 180 150 L 140 150 L 140 65 L 100 195 L 60 65 L 60 150 L 20 150 Z" />
+    <symbol id="i-m" viewBox="0 0 200 200"><path d="M 20 25 L 180 25 L 180 150 L 140 150 L 140 65 L 100 195 L 60 65 L 60 150 L 20 150 Z" fill="currentColor"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5L8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-watch" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="4" y="4" width="8" height="8" rx="2.4"/><path d="M6 4l.5-2.5h3L10 4M6 12l.5 2.5h3L10 12"/></g></symbol>
+    <symbol id="i-phone" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4.25" y="1.5" width="7.5" height="13" rx="2"/><path d="M7 3.7h2" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-web" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M1.5 5.5h13"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 16 16"><path d="M8 1.6l5.2 2v4c0 3.2-2.2 5.6-5.2 6.8C5 13.2 2.8 10.8 2.8 7.6v-4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="3.5" cy="4" r="1.8"/><circle cx="12.5" cy="12" r="1.8"/><path d="M5.3 4h3.2a2 2 0 012 2v4"/></g></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8.6 1.8h5.6v5.6L7.6 14 2 8.4z"/><circle cx="11.3" cy="4.7" r="1"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 14.5s4.6-4.3 4.6-8a4.6 4.6 0 10-9.2 0c0 3.7 4.6 8 4.6 8z"/><circle cx="8" cy="6.5" r="1.7"/></g></symbol>
+    <symbol id="i-gap" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M13.2 5.2A5.8 5.8 0 108 2.2"/><path d="M8 5v3l2 1.4"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="7" width="10" height="7.5" rx="1.8"/><path d="M5.3 7V5.2a2.7 2.7 0 015.4 0V7"/></g></symbol>
+    <symbol id="i-ft" viewBox="0 0 100 100">
+      <circle cx="50" cy="52" r="27" fill="none" stroke="#FFFDF5" stroke-width="10.5" stroke-linecap="round" stroke-dasharray="114 200" transform="rotate(20 50 52)"/>
+      <circle cx="50" cy="52" r="27" fill="none" stroke="#1CB0F6" stroke-width="10.5" stroke-linecap="round" stroke-dasharray="27.3 200" transform="rotate(292 50 52)"/>
+      <path d="M50 52L61.4 42.8" stroke="#FFFDF5" stroke-width="7.5" stroke-linecap="round"/>
+      <circle cx="50" cy="52" r="6.2" fill="#FFFDF5"/>
     </symbol>
   </defs>
 </svg>
 
-<!-- ============== NAV ============== -->
-<nav>
-  <div class="brand">
-    <span class="mark"><svg width="22" height="22"><use href="#m-mark"/></svg></span>
-    <span class="wordmark">MIRANDE SYSTEMS</span>
-  </div>
-  <ul>
-    <li><a href="#products">Products</a></li>
-    <li><a href="#story">Story</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <button class="cta">Get In Touch</button>
-</nav>
+<!-- 0 · preloader (dot matrix) -->
+<div class="pre" id="pre" aria-hidden="true"><canvas id="pre-canvas"></canvas></div>
 
-<!-- ============== HERO ============== -->
-<section class="hero">
-  <div class="hero-mark-bg">
-    <svg><use href="#m-mark"/></svg>
+<!-- 1 · floating glass pill nav -->
+<header class="nav" id="nav">
+  <div class="nav__pill">
+    <a class="nav__brand" href="#top" aria-label="Mirande Systems, back to top">
+      <svg class="nav__m" aria-hidden="true"><use href="#i-m"/></svg>
+      <span>Mirande Systems</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+      <a href="#founder">Founder</a>
+    </nav>
+    <a class="nav__cta" href="#contact">Get in touch</a>
   </div>
+</header>
 
-  <div class="hero-top">
-    <div class="mono label">[ EST. 2025 / SOFTWARE STUDIO ]</div>
-    <div class="mono label">003 PRODUCTS / 001 MISSION</div>
-  </div>
+<main id="top">
 
-  <div class="hero-content">
-    <h1 class="hero-headline">Software,<br>Forged Sharp.</h1>
-  </div>
-
-  <div class="hero-bottom">
-    <p class="hero-desc">
-      Mirande Systems LLC builds opinionated software for people who refuse to settle for bloated, broken tools. Three products. Zero compromise.
-    </p>
-    <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-num">03</div>
-        <div class="mono stat-label">Products</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">01</div>
-        <div class="mono stat-label">Mission</div>
+  <!-- 2 · hero -->
+  <section class="hero" data-theme="dark" aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <h1 class="hero__title" id="hero-title">
+        <span class="line">We <em>design</em>, <em>build</em> and <em>ship</em></span>
+        <span class="line">our own products.</span>
+      </h1>
+      <p class="hero__sub">An independent software studio in the US, with three products for iPhone, Apple&nbsp;Watch, Android and the&nbsp;web.</p>
+      <div class="hero__ctas">
+        <a class="pill pill--solid" href="#products">See the products <svg aria-hidden="true"><use href="#i-down"/></svg></a>
+        <a class="pill pill--glass" href="mailto:hello@mirandesystems.com?subject=Investor%20inquiry">Investors <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ============== MARQUEE ============== -->
-<div class="marquee">
-  <div class="marquee-track">
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANCHORED</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANVIL</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> FREETIME</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> BUILT WITH INTENT</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANCHORED</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> ANVIL</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> FREETIME</div>
-    <div class="marquee-item"><span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span> BUILT WITH INTENT</div>
-  </div>
-</div>
+    <!-- Tiny-style orbit (drag to spin) -->
+    <div class="orbit" id="orbit" aria-hidden="true">
+      <div class="orbit__ring" id="orbit-ring"></div>
+    </div>
 
-<!-- ============== PRODUCTS ============== -->
-<section class="section" id="products">
-  <div class="section-head">
-    <div class="section-label">
-      <div class="num">01</div>
-      <div class="mono tag">/ Products</div>
-    </div>
-    <h2 class="section-title">Three tools. Each built to replace something broken.</h2>
-  </div>
+    <ul class="sr-only">
+      <li>Anchored, a routine coach for iPhone and Apple Watch</li>
+      <li>Anvil, a quoting, ticketing and project workspace for MSPs</li>
+      <li>FreeTime, an AI companion for business travelers on iOS and Android</li>
+    </ul>
+  </section>
 
-  <!-- ANCHORED -->
-  <a class="product" href="/anchored/">
-    <div class="product-id">
-      <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
-      <div class="mono">001 / IOS · WATCHOS</div>
-    </div>
-    <div>
-      <h3 class="product-name">Anchored.</h3>
-      <p class="product-tagline">Habits that hold.</p>
-    </div>
-    <div class="product-meta">
-      <p>A habit tracker for iOS and Apple Watch designed for people who actually want to change. No streak-shaming, no gamified nonsense — just rituals you can stick to.</p>
-      <div class="product-platforms">
-        <span>iOS</span>
-        <span>Apple Watch</span>
-        <span>SwiftUI</span>
-      </div>
-      <div class="product-arrow">→</div>
-    </div>
-  </a>
+  <!-- 4 · blur-reveal statement -->
+  <section class="statement" id="about" data-theme="dark" aria-label="About the studio">
+    <p class="statement__text" id="statement-text">We design, build and support every product in-house. Each one starts with a tool people are tired of fighting, and our job is not only to replace it, but to make the replacement something you'd actually want to open.</p>
+  </section>
 
-  <!-- ANVIL -->
-  <div class="product">
-    <div class="product-id">
-      <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
-      <div class="mono">002 / SAAS · MSP</div>
-    </div>
-    <div>
-      <h3 class="product-name">Anvil.</h3>
-      <p class="product-tagline">The PSA that doesn't fight you.</p>
-    </div>
-    <div class="product-meta">
-      <p>A modern replacement for ConnectWise CPQ and PSA. Built for MSPs tired of paying premium for legacy software. Quotes, tickets, projects — finally usable.</p>
-      <div class="product-platforms">
-        <span>Web App</span>
-        <span>CPQ</span>
-        <span>PSA</span>
-        <span>MSP</span>
-      </div>
-      <div class="product-arrow">→</div>
-    </div>
-  </div>
+  <!-- 5 · products -->
+  <section class="products" id="products" data-theme="light" aria-labelledby="products-title">
+    <h2 class="products__title" id="products-title">Three products, <em>one</em> studio.</h2>
 
-  <!-- FREETIME -->
-  <div class="product">
-    <div class="product-id">
-      <span class="mark"><svg width="20" height="20"><use href="#m-mark"/></svg></span>
-      <div class="mono">003 / SAAS · TRADES</div>
+    <div class="apps">
+      <button class="app" type="button" data-target="#p-anchored" aria-label="Anchored, jump to product">
+        <span class="app__tile app__tile--anchored"><span class="app__face"><img src="/assets/site/img/anchored-icon.png" alt=""></span></span>
+        <span class="app__name">Anchored</span>
+      </button>
+      <button class="app" type="button" data-target="#p-anvil" aria-label="Anvil, jump to product">
+        <span class="app__tile app__tile--anvil"><span class="app__face"><span class="anvil-mark"></span></span></span>
+        <span class="app__name">Anvil</span>
+      </button>
+      <button class="app" type="button" data-target="#p-freetime" aria-label="FreeTime, jump to product">
+        <span class="app__tile app__tile--freetime"><span class="app__face"><svg><use href="#i-ft"/></svg></span></span>
+        <span class="app__name">FreeTime</span>
+      </button>
     </div>
-    <div>
-      <h3 class="product-name">FreeTime.</h3>
-      <p class="product-tagline">Fill the gaps. Skip the calls.</p>
-    </div>
-    <div class="product-meta">
-      <p>An AI travel app built for business travelers with gaps in their itinerary. Type what you want. Maps it. Routes it. No more wasted hours between meetings.</p>
-      <div class="product-platforms">
-        <span>Web App</span>
-        <span>Scheduling</span>
-        <span>Trades</span>
-      </div>
-      <div class="product-arrow">→</div>
-    </div>
-  </div>
-</section>
 
-<!-- ============== STORY ============== -->
-<section class="founder" id="story">
-  <div class="founder-mark-bg">
-    <svg><use href="#m-mark"/></svg>
-  </div>
-  <div class="founder-grid">
-    <div class="section-label">
-      <div class="num" style="color: #fff;">02</div>
-      <div class="mono tag" style="color: #888;">/ Our Story</div>
+    <div class="cards">
+      <article class="pcard pcard--anchored" id="p-anchored">
+        <header class="pcard__head">
+          <h3 class="pcard__brand"><img src="/assets/site/img/anchored-icon-dark.png" alt="" class="pcard__icon">Anchored</h3>
+          <a class="pcard__more" href="/anchored/">Learn more <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </header>
+        <p class="pcard__meta"><svg aria-hidden="true"><use href="#i-watch"/></svg>iOS + watchOS · a routine coach <span class="pcard__tag">Coming soon</span></p>
+        <ul class="pcard__facts">
+          <li>Build your morning once on iPhone, your Apple&nbsp;Watch taps you through every step</li>
+          <li>No account, no tracking and no subscription, just a one-time unlock</li>
+        </ul>
+        <div class="pcard__media">
+          <figure class="pcard__visual">
+            <picture>
+              <source media="(max-width: 700px)" srcset="/assets/site/visuals/anchored-square.webp" type="image/webp" width="1200" height="1200">
+              <img src="/assets/site/visuals/anchored-card.webp" width="1600" height="1200" alt="Anchored: your Apple Watch walks you through a four-step morning routine while your phone stays in the other room, done by 7:42" loading="lazy" decoding="async">
+            </picture>
+          </figure>
+        </div>
+      </article>
+
+      <article class="pcard pcard--freetime" id="p-freetime">
+        <header class="pcard__head">
+          <h3 class="pcard__brand"><svg class="pcard__icon" aria-hidden="true"><use href="#i-ft"/></svg>FreeTime</h3>
+          <a class="pcard__more" href="/freetime/">Learn more <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </header>
+        <p class="pcard__meta"><svg aria-hidden="true"><use href="#i-phone"/></svg>iOS + Android · for business travelers <span class="pcard__tag">Coming soon</span></p>
+        <ul class="pcard__facts">
+          <li>Reads your day and finds the gaps between meetings</li>
+          <li>Ask in plain English, it maps the route and gets you back on time</li>
+        </ul>
+        <div class="pcard__media">
+          <figure class="pcard__visual">
+            <picture>
+              <source media="(max-width: 700px)" srcset="/assets/site/visuals/freetime-square.webp" type="image/webp" width="1200" height="1200">
+              <img src="/assets/site/visuals/freetime-card.webp" width="1600" height="1200" alt="FreeTime: in an unfamiliar city with a free gap until 2:30, it finds a good lunch spot six minutes away and a quiet café to prep, maps the walk and gets you back in time" loading="lazy" decoding="async">
+            </picture>
+          </figure>
+        </div>
+      </article>
+
+      <article class="pcard pcard--anvil pcard--wide" id="p-anvil">
+        <div class="pcard__col">
+          <header class="pcard__head">
+            <h3 class="pcard__brand"><span class="anvil-mark pcard__icon"></span>Anvil</h3>
+            <a class="pcard__more" href="/anvil/">Learn more <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </header>
+          <p class="pcard__meta"><svg aria-hidden="true"><use href="#i-web"/></svg>Web app · for MSPs <span class="pcard__tag">Coming soon</span></p>
+          <ul class="pcard__facts">
+            <li>Quotes, tickets and projects in one fast workspace, built by someone who works at an MSP</li>
+            <li>Paste a distributor SKU and see live margin, with a warning when a price changed since the last quote</li>
+          </ul>
+        </div>
+        <div class="pcard__media">
+          <figure class="pcard__visual">
+            <picture>
+              <source media="(max-width: 700px)" srcset="/assets/site/visuals/anvil-square.webp" type="image/webp" width="1200" height="1200">
+              <img src="/assets/site/visuals/anvil-card.webp" width="1600" height="1200" alt="Anvil: paste a distributor SKU into a quote, see the margin, get warned that a price changed since your last quote, send it, and hand the won deal to projects" loading="lazy" decoding="async">
+            </picture>
+          </figure>
+        </div>
+      </article>
     </div>
-    <div class="founder-content">
-      <h2 class="founder-name">Built by people<br>who have to<br>use it.</h2>
-      <p class="founder-bio">
-        Mirande Systems LLC started where most good software does — with a problem nobody else was bothering to fix. The tools we relied on every day were bloated, slow, and built for an era that's already over.
-        <br><br>
-        So we started building replacements. Tools sharp enough for the people who actually do the work. No bloat. No quarterly-roadmap theater. Just software that earns its place on your screen.
-      </p>
-      <div class="founder-signature">
-        <div class="mono sig-label">Founded by</div>
-        <div class="sig-name">Daniel Mirande</div>
-        <div class="mono sig-role">Founder &nbsp;//&nbsp; CEO</div>
+  </section>
+
+  <!-- 6 · giant 3D M -->
+  <section class="mshow" id="mshow" data-theme="light" aria-labelledby="mshow-title">
+    <div class="mshow__sticky">
+      <canvas class="mshow__canvas" id="m-canvas" aria-hidden="true"></canvas>
+      <div class="mshow__copy">
+        <h2 class="mshow__title" id="mshow-title"><span>Designed in&#8209;house,</span><span>built in&#8209;house.</span></h2>
+        <p class="mshow__body">Our products aren't only designed here, they're built, shipped and supported here too, so nothing gets lost in a handoff.</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============== MANIFESTO ============== -->
-<section class="manifesto">
-  <div class="divider-marks">
-    <span class="mark"><svg width="14" height="14"><use href="#m-mark"/></svg></span>
-    <span class="mark"><svg width="14" height="14"><use href="#m-mark"/></svg></span>
-    <span class="mark"><svg width="14" height="14"><use href="#m-mark"/></svg></span>
-  </div>
-  <p>We don't chase trends. We build tools that last.</p>
-</section>
+  <!-- 9 · founder letter -->
+  <section class="founder" id="founder" data-theme="dark" aria-labelledby="founder-title">
+    <div class="founder__side">
+      <h2 class="founder__title" id="founder-title">Built by someone who <em>needed</em> it first.</h2>
+      <svg class="founder__arrow" viewBox="0 0 300 30" aria-hidden="true"><path d="M2 20C80 26 190 26 292 12M278 4l14 8-15 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <article class="letter" id="letter">
+      <p class="letter__hi">Hi there,</p>
+      <p>I work at an MSP in the US, and for years I've watched good people fight software that was built for someone else, quoting tools that slow you down and ticket systems nobody likes opening.</p>
+      <p>At some point I stopped <s class="letter__strike"><span>complaining about it</span></s> <span class="letter__edit">waiting for someone else to fix it</span> and started building the replacements myself.</p>
+      <p class="letter__hl"><mark>Mirande Systems is where those products live, and every one of them has to be something I'd actually want to use every day.</mark></p>
+      <p>They're all still in development, and I'd love to show you where they're headed.</p>
+      <div class="letter__sign">
+        <p>Thanks,</p>
+        <p class="letter__name">Daniel Mirande, Founder</p>
+      </div>
+    </article>
+  </section>
 
-<!-- ============== CONTACT ============== -->
-<section class="contact" id="contact">
-  <h2>Let's talk.</h2>
-  <div class="contact-right">
-    <a href="mailto:hello@mirandesystems.com">hello@mirandesystems.com →</a>
-    <a href="#">Partnerships →</a>
-    <a href="#">Press →</a>
-    <a href="#">Careers →</a>
-  </div>
-</section>
+  <!-- 10 · contact + footer -->
+  <section class="contact" id="contact" data-theme="dark" aria-labelledby="contact-title">
+    <canvas class="stars" id="stars" aria-hidden="true"></canvas>
+    <div class="contact__inner">
+      <h2 class="contact__title" id="contact-title">Let's <em>talk.</em></h2>
+      <p class="contact__sub">Whether you're an investor, a future customer or just curious about what we're building, we'd love to hear from you.</p>
+      <div class="contact__ctas">
+        <a class="pill pill--solid pill--lg" href="mailto:hello@mirandesystems.com?subject=Investor%20inquiry">Investor inquiry <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="pill pill--glass pill--lg" href="mailto:hello@mirandesystems.com">General inquiry <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
 
-<!-- ============== FOOTER ============== -->
-<footer>
-  <div class="footer-brand">
-    <span class="mark"><svg width="16" height="16"><use href="#m-mark"/></svg></span>
-    <span class="mono">© 2026 MIRANDE SYSTEMS / ALL RIGHTS RESERVED</span>
-  </div>
-  <div class="mono copy">BUILT IN IOWA</div>
-</footer>
+  <footer class="foot" data-theme="light">
+    <div class="foot__inner">
+      <div class="foot__brand">
+        <a class="foot__logo" href="#top" aria-label="Mirande Systems, back to top"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#i-m"/></svg></a>
+        <div class="foot__legal">
+          <p class="foot__copy">Mirande Systems &copy; 2026</p>
+          <a href="mailto:hello@mirandesystems.com">hello@mirandesystems.com</a>
+        </div>
+      </div>
+      <nav class="foot__cols" aria-label="Footer">
+        <div class="foot__col">
+          <p class="foot__h">Products</p>
+          <a href="/anchored/">Anchored</a>
+          <a href="/anvil/">Anvil</a>
+          <a href="/freetime/">FreeTime</a>
+        </div>
+        <div class="foot__col">
+          <p class="foot__h">Company</p>
+          <a href="#about">About</a>
+          <a href="#founder">Founder</a>
+          <a href="mailto:hello@mirandesystems.com?subject=Investor%20inquiry">Investors</a>
+        </div>
+        <div class="foot__col">
+          <p class="foot__h">Support</p>
+          <a href="/anchored/support/">Anchored support</a>
+          <a href="/anchored/privacy/">Anchored privacy</a>
+          <a href="/anchored/terms/">Anchored terms</a>
+        </div>
+        <div class="foot__col">
+          <p class="foot__h">Contact</p>
+          <a href="mailto:hello@mirandesystems.com">General inquiry</a>
+          <a href="mailto:hello@mirandesystems.com?subject=Investor%20inquiry">Investor inquiry</a>
+          <p class="foot__note">Mirande Systems LLC<br>United States</p>
+        </div>
+      </nav>
+    </div>
+    <a class="foot__credit" href="https://usevantagetech.com" target="_blank" rel="noopener">
+      <svg viewBox="217.345 212.675 316.602 197.112" aria-hidden="true"><path fill="currentColor" d="M217.345 405.829L347.943 219.825L415.221 295.018L446.881 267.316L533.947 409.787L435.009 330.636L395.434 350.424L351.901 279.188Z"/><path fill="none" stroke="currentColor" stroke-width="15" d="M364.549 270.615C376.457 231.719 421.130 210.910 464.327 224.135C508.800 237.751 528.167 284.053 520.981 318.509C517.100 337.122 505.980 349.839 499.166 356.376"/></svg>
+      <span>Website is created and managed by VTG</span>
+    </a>
+  </footer>
+</main>
 
+
+<script src="/assets/site/lib/gsap.min.js"></script>
+<script src="/assets/site/lib/ScrollTrigger.min.js"></script>
+<script src="/assets/site/lib/SplitText.min.js"></script>
+<script src="/assets/site/lib/lenis.min.js"></script>
+<script type="module" src="/assets/site/js/main.js"></script>
 </body>
 </html>

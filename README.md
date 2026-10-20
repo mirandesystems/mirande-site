@@ -1,10 +1,31 @@
-# Mirande Systems — Landing Page
+# Mirande Systems — Website
 
-The official landing page for [Mirande Systems](https://www.mirandesystems.com) — *Software, Forged Sharp.*
+The official site for [Mirande Systems](https://www.mirandesystems.com), an independent software studio.
 
-## Stack
+## Structure
 
-Single-file static HTML/CSS/JS. No build step, no dependencies.
+```
+index.html            Home page
+anchored/             Anchored landing + privacy / terms / support
+anvil/                Anvil product page
+freetime/             FreeTime product page
+assets/site/site.css  Styles for the home and product pages
+assets/site/js/       main.js (page wiring), orbit.js (hero ring), dots.js (preloader),
+                      m3d.js (3D M), stars.js (contact starfield)
+assets/site/lib/      Vendored libraries: GSAP + ScrollTrigger + SplitText, Lenis, three.js
+assets/site/img/      Logos, icons, favicon, share image
+assets/site/visuals/  Product visuals (card and square)
+```
+
+Static HTML/CSS/JS, no build step.
+
+## Local development
+
+```bash
+python3 -m http.server 4173
+```
+
+Then open http://localhost:4173.
 
 ## Deployment
 

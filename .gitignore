@@ -21,3 +21,7 @@ yarn-error.log*
 # Misc
 .env
 .env.local
+
+# Local tooling and design lab (not deployed)
+.claude/
+_lab/

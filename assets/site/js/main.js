@@ -153,7 +153,11 @@ if (!reduce) {
       m.initM({ section: sec, canvas: $('#m-canvas'), reduce, gsap, ScrollTrigger, debugP: params.get('mp') });
     } catch (err) { console.error('3D M failed', err); }
   };
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) go(); }, { rootMargin: '120% 0px' }).observe(sec);
+  // warm it up while the visitor is still reading the hero: fetch + parse in one idle slot, set up in the next.
+  // The observer is only a fallback for someone who scrolls down before the browser goes idle.
+  const idle = window.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 2500 }) : (fn) => setTimeout(fn, 200);
+  setTimeout(() => idle(() => { import('./m3d.js').then(() => idle(go)).catch(() => {}); }), 3200);
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) go(); }, { rootMargin: '60% 0px' }).observe(sec);
   if (!reduce) {
     gsap.from('.mshow__title span', { yPercent: 100, opacity: 0, duration: 1.3, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: sec, start: 'top 40%', once: true } });
     gsap.from('.mshow__body', { y: 30, opacity: 0, duration: 1.3, delay: 0.25, ease: 'expo.out', scrollTrigger: { trigger: sec, start: 'top 40%', once: true } });

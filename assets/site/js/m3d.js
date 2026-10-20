@@ -1,7 +1,7 @@
 // Giant matte-black extruded M (Not Boring). Chamfered edges, film grain on the surface,
 // soft studio light and a soft cast shadow on the white wall. Rolls through the viewport on scroll.
-import * as THREE from '../lib/three.js';
-import { RoomEnvironment } from '../lib/three.js';
+import * as THREE from '../lib/three-m3d.js';
+import { RoomEnvironment } from '../lib/three-m3d.js';
 
 const M_PTS = [[20, 25], [180, 25], [180, 150], [140, 150], [140, 65], [100, 195], [60, 65], [60, 150], [20, 150]];
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
@@ -28,9 +28,12 @@ function sample(keys, p) {
   return o;
 }
 
-export function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
+// set-up is split into small steps that each run in an idle slot, so warming this up in the background
+// never stalls the page (shader compiles go through compileAsync / parallel compile where supported)
+const idleSlot = () => new Promise((res) => (window.requestIdleCallback ? requestIdleCallback(() => res(), { timeout: 600 }) : setTimeout(res, 50)));
+
+export async function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 1.0;
@@ -39,9 +42,12 @@ export function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
   renderer.setClearColor(0xffffff, 0);
 
   const scene = new THREE.Scene();
+  await idleSlot();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.42;
+  pmrem.dispose();
+  await idleSlot();
 
   const camera = new THREE.PerspectiveCamera(24, 1, 1, 200);
   camera.position.set(0, 0, 34);
@@ -77,10 +83,10 @@ export function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
   const key = new THREE.DirectionalLight(0xffffff, 2.6);
   key.position.set(9, 13, 16);
   key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.mapSize.set(512, 512);
   key.shadow.camera.left = -16; key.shadow.camera.right = 16; key.shadow.camera.top = 16; key.shadow.camera.bottom = -16;
   key.shadow.camera.near = 1; key.shadow.camera.far = 60;
-  key.shadow.radius = 26; key.shadow.blurSamples = 25; key.shadow.bias = -0.0006;
+  key.shadow.radius = 13; key.shadow.blurSamples = 10; key.shadow.bias = -0.0006;  // soft enough, far cheaper per frame
   scene.add(key); scene.add(key.target);
   const fill = new THREE.DirectionalLight(0xffffff, 0.55); fill.position.set(-12, 4, 10); scene.add(fill);
   const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(2, 14, -6); scene.add(rim);
@@ -100,6 +106,8 @@ export function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
   function resize() {
     W = canvas.clientWidth; H = canvas.clientHeight;
     if (!W || !H) return;
+    // matte black on white with MSAA: 1.5x is visually identical on big screens and much cheaper
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, W * H > 1.2e6 ? 1.5 : 2));
     renderer.setSize(W, H, false);
     camera.aspect = W / H; camera.updateProjectionMatrix();
     viewH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
@@ -154,6 +162,11 @@ export function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
   document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else if (visible) start(); });
   window.addEventListener('resize', () => { resize(); start(); });
   resize();
-  start();
+  // compile shaders and draw once now, in idle time, long before the section is on screen,
+  // so scrolling into it never stalls
+  await idleSlot();
+  if (renderer.compileAsync) await renderer.compileAsync(scene, camera); else renderer.compile(scene, camera);
+  await idleSlot();
+  frame(performance.now());
   window.__m3d = { renderer, scene, camera, pivot, set p(v) { target = cur = v; start(); } };
 }

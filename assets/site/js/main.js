@@ -1,7 +1,7 @@
 // Mirande Systems · home page
 import { runPreloader } from './dots.js';
 
-const { gsap, ScrollTrigger, SplitText, Lenis } = window;
+const { gsap, ScrollTrigger, SplitText } = window;
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const html = document.documentElement;
@@ -11,17 +11,11 @@ const isOrbit = html.classList.contains('hero-orbit');
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-// ------------------------------------------------------------ smooth scroll
-let lenis = null;
-if (!reduce) {
-  lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((t) => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-}
+// ------------------------------------------------------------ scrolling
+// Native scrolling only: it runs on the compositor, so it stays smooth on 120Hz screens even if the page is busy.
 const scrollTo = (target, offset = 0) => {
-  if (lenis) lenis.scrollTo(target, { offset, duration: 1.4 });
-  else (typeof target === 'number' ? window.scrollTo(0, target) : target.scrollIntoView({ behavior: 'auto' }));
+  const y = typeof target === 'number' ? target : target.getBoundingClientRect().top + window.scrollY + offset;
+  window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
 };
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
@@ -38,11 +32,11 @@ document.addEventListener('click', (e) => {
 window.__jump = (sel, p = 0) => {
   const el = $(sel); if (!el) return 0;
   const y = el.getBoundingClientRect().top + window.scrollY + p * Math.max(0, el.offsetHeight - window.innerHeight);
-  if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+  window.scrollTo(0, y);
   ScrollTrigger.update();
   return Math.round(y);
 };
-window.__to = (y) => { if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y); ScrollTrigger.update(); return Math.round(window.scrollY); };
+window.__to = (y) => { window.scrollTo(0, y); ScrollTrigger.update(); return Math.round(window.scrollY); };
 window.__fps = (ms = 2000) => new Promise((res) => {
   let n = 0; const t0 = performance.now();
   const f = (t) => { n++; if (t - t0 < ms) requestAnimationFrame(f); else res(Math.round((n * 1000) / (t - t0))); };
@@ -76,18 +70,25 @@ updateNav();
 // ------------------------------------------------------------ hero
 let orbit = null;
 
+let introStarted = false, introDone = false;
+// decode the product visuals in idle time once the intro has settled, so they're ready before you scroll to them
+function predecode() {
+  const idle = window.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 2000 }) : (fn) => setTimeout(fn, 300);
+  $$('.pcard__visual img').forEach((img, i) => setTimeout(() => idle(() => { if (img.decode) img.decode().catch(() => {}); }), i * 250));
+}
 function heroIntro() {
-  if (reduce) { html.classList.remove('js-intro'); return; }
+  introStarted = true; 
+  if (reduce) { introDone = true; html.classList.remove('js-intro'); startM(); predecode(); return; }
   const title = $('.hero__title');
   const split = new SplitText(title, { type: 'words', wordsClass: 'hw' });
-  gsap.set(split.words, { yPercent: 60, opacity: 0, filter: 'blur(14px)' });
+  gsap.set(split.words, { yPercent: 60, opacity: 0 });
   gsap.set(['.hero__sub', '.hero__ctas'], { y: 26, opacity: 0 });
   html.classList.remove('js-intro');
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  tl.to(split.words, { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.5, stagger: 0.075 }, 0)
+  tl.to(split.words, { yPercent: 0, opacity: 1, duration: 1.5, stagger: 0.075 }, 0)
     .to('.hero__sub', { y: 0, opacity: 1, duration: 1.3 }, 0.45)
     .to('.hero__ctas', { y: 0, opacity: 1, duration: 1.3 }, 0.58)
-    .add(() => { gsap.set(split.words, { clearProps: 'filter' }); }, 2.4);
+    .add(() => { introDone = true; startM(); predecode(); }, 2.2);
   if (orbit) orbit.intro(0.2);
 }
 
@@ -97,13 +98,13 @@ async function boot() {
     orbit = m.initOrbit({ el: $('#orbit'), ring: $('#orbit-ring'), hero: $('.hero'), reduce, gsap });
   }
   if (html.classList.contains('has-pre')) {
+    introStarted = true;   // the preloader counts as the intro: no heavy set-up while it plays
     try { sessionStorage.setItem('ms-pre', '1'); } catch (e) {}
     runPreloader({ el: $('#pre'), canvas: $('#pre-canvas'), onReveal: heroIntro });
   } else heroIntro();
 }
-document.fonts.ready.then(boot);
 
-// ------------------------------------------------------------ blur-reveal statement (Bending Spoons)
+// ------------------------------------------------------------ statement: words brighten as you read (Bending Spoons)
 {
   const p = $('#statement-text');
   const words = p.textContent.trim().split(/\s+/);
@@ -111,9 +112,9 @@ document.fonts.ready.then(boot);
   p.innerHTML = words.map((w) => `<span class="w" aria-hidden="true">${w}</span>`).join(' ');
   const ws = $$('.w', p);
   if (!reduce) {
-    gsap.set(ws, { opacity: 0.1, filter: 'blur(12px)' });
+    gsap.set(ws, { opacity: 0.14 });
     gsap.timeline({ scrollTrigger: { trigger: p, start: 'top 82%', end: 'bottom 45%', scrub: 0.6 } })
-      .to(ws, { opacity: 1, filter: 'blur(0px)', stagger: 0.12, duration: 0.6, ease: 'none' });
+      .to(ws, { opacity: 1, stagger: 0.12, duration: 0.6, ease: 'none' });
   }
 }
 
@@ -142,26 +143,34 @@ if (!reduce) {
   });
 }
 
-// ------------------------------------------------------------ giant 3D M (lazy)
+// ------------------------------------------------------------ giant 3D M
+// The module is fetched straight away. Set-up is small now, and it runs either before the hero intro starts
+// or once the intro has settled, so it never lands in the middle of an animation or a scroll.
+let mModule = null, mStarted = false;
+// create the WebGL context now, while the page is still loading: it is the most expensive part of the set-up
+const mCanvas = $('#m-canvas');
+let mGL = null;
+try { mGL = mCanvas.getContext('webgl2', { antialias: true, alpha: true, depth: true, stencil: false, premultipliedAlpha: true, powerPreference: 'high-performance' }); } catch (e) {}
+const mReady = import('./m3d.js').then((m) => { mModule = m; startM(); }).catch((err) => console.error('3D M failed', err));
+
+// start once fonts are in and the 3D section has been set up on the still-black screen (capped at 1.5s on slow
+// connections), then give the GPU two frames to settle before anything moves
+const frames2 = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+Promise.race([Promise.all([document.fonts.ready, mReady]), new Promise((r) => setTimeout(r, 1500))]).then(frames2).then(boot);
+function startM() {
+  if (mStarted || !mModule) return;
+  if (introStarted && !introDone) return;            // wait for the intro to finish
+  mStarted = true;
+  mModule.initM({ section: $('#mshow'), canvas: mCanvas, context: mGL, reduce, gsap, ScrollTrigger, debugP: params.get('mp') });
+}
 {
   const sec = $('#mshow');
-  let started = false;
-  const go = async () => {
-    if (started) return; started = true;
-    try {
-      const m = await import('./m3d.js');
-      m.initM({ section: sec, canvas: $('#m-canvas'), reduce, gsap, ScrollTrigger, debugP: params.get('mp') });
-    } catch (err) { console.error('3D M failed', err); }
-  };
-  // warm it up while the visitor is still reading the hero: fetch + parse in one idle slot, set up in the next.
-  // The observer is only a fallback for someone who scrolls down before the browser goes idle.
-  const idle = window.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 2500 }) : (fn) => setTimeout(fn, 200);
-  setTimeout(() => idle(() => { import('./m3d.js').then(() => idle(go)).catch(() => {}); }), 3200);
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) go(); }, { rootMargin: '60% 0px' }).observe(sec);
   if (!reduce) {
     gsap.from('.mshow__title span', { yPercent: 100, opacity: 0, duration: 1.3, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: sec, start: 'top 40%', once: true } });
     gsap.from('.mshow__body', { y: 30, opacity: 0, duration: 1.3, delay: 0.25, ease: 'expo.out', scrollTrigger: { trigger: sec, start: 'top 40%', once: true } });
   }
+  // safety net: if someone scrolls down before the intro finishes, set it up anyway
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) { introDone = true; startM(); } }, { rootMargin: '80% 0px' }).observe(sec);
 }
 
 // ------------------------------------------------------------ founder letter (Tiny)
@@ -199,7 +208,7 @@ if (!reduce) {
   new IntersectionObserver(([e]) => { if (e.isIntersecting) go(); }, { rootMargin: '60% 0px' }).observe($('.contact'));
   if (!reduce) {
     const split = new SplitText('.contact__title', { type: 'words', wordsClass: 'cw' });
-    gsap.from(split.words, { yPercent: 50, opacity: 0, filter: 'blur(14px)', duration: 1.5, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: '.contact', start: 'top 60%', once: true } });
+    gsap.from(split.words, { yPercent: 50, opacity: 0, duration: 1.5, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: '.contact', start: 'top 60%', once: true } });
     gsap.from(['.contact__sub', '.contact__ctas'], { y: 30, opacity: 0, duration: 1.3, stagger: 0.12, delay: 0.3, ease: 'expo.out', scrollTrigger: { trigger: '.contact', start: 'top 60%', once: true } });
   }
 }

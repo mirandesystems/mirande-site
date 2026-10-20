@@ -1,7 +1,8 @@
-// Giant matte-black extruded M (Not Boring). Chamfered edges, film grain on the surface,
-// soft studio light and a soft cast shadow on the white wall. Rolls through the viewport on scroll.
+// Giant matte-black extruded M (Not Boring). Chamfered edges, film grain on the surface, soft studio light
+// and a soft shadow on the white wall. Rolls through the viewport on scroll.
+// Built to be cheap: no shadow maps or environment maps (the soft shadow is a pre-drawn texture), and it only
+// draws a frame while it is actually moving.
 import * as THREE from '../lib/three-m3d.js';
-import { RoomEnvironment } from '../lib/three-m3d.js';
 
 const M_PTS = [[20, 25], [180, 25], [180, 150], [140, 150], [140, 65], [100, 195], [60, 65], [60, 150], [20, 150]];
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
@@ -28,27 +29,26 @@ function sample(keys, p) {
   return o;
 }
 
-// set-up is split into small steps that each run in an idle slot, so warming this up in the background
-// never stalls the page (shader compiles go through compileAsync / parallel compile where supported)
-const idleSlot = () => new Promise((res) => (window.requestIdleCallback ? requestIdleCallback(() => res(), { timeout: 600 }) : setTimeout(res, 50)));
+// a soft, M-shaped shadow drawn once with canvas shadowBlur (works in every browser)
+function shadowTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 256;
+  const x = c.getContext('2d');
+  x.shadowColor = 'rgba(0,0,0,1)'; x.shadowBlur = 26; x.shadowOffsetX = 1000;
+  x.translate(-1000 + 128 - 100 * 0.78, 128 - 110 * 0.78); x.scale(0.78, 0.78);
+  x.beginPath(); M_PTS.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py))); x.closePath(); x.fill();
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
 
-export async function initM({ section, canvas, reduce, ScrollTrigger, debugP }) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+export function initM({ section, canvas, context, reduce, ScrollTrigger, debugP }) {
+  const renderer = new THREE.WebGLRenderer({ canvas, context: context || undefined, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.0;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.VSMShadowMap;
   renderer.setClearColor(0xffffff, 0);
 
   const scene = new THREE.Scene();
-  await idleSlot();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.42;
-  pmrem.dispose();
-  await idleSlot();
-
   const camera = new THREE.PerspectiveCamera(24, 1, 1, 200);
   camera.position.set(0, 0, 34);
 
@@ -62,7 +62,7 @@ export async function initM({ section, canvas, reduce, ScrollTrigger, debugP }) 
   geo.translate(0, 0, -depth / 2);
   geo.computeVertexNormals();
 
-  const mat = new THREE.MeshStandardMaterial({ color: 0x1c1c1c, roughness: 0.66, metalness: 0.0 });
+  const mat = new THREE.MeshPhongMaterial({ color: 0x272727, specular: 0x3a3a3a, shininess: 10 });
   mat.onBeforeCompile = (sh) => {
     sh.fragmentShader = sh.fragmentShader
       .replace('void main() {', `
@@ -73,33 +73,20 @@ export async function initM({ section, canvas, reduce, ScrollTrigger, debugP }) 
         gl_FragColor.rgb += (g - 0.5) * 0.085;`);
   };
   const m = new THREE.Mesh(geo, mat);
-  m.castShadow = true;
-  m.receiveShadow = true;
   const pivot = new THREE.Group();
   pivot.add(m);
   scene.add(pivot);
 
-  // --- light
-  const key = new THREE.DirectionalLight(0xffffff, 2.6);
-  key.position.set(9, 13, 16);
-  key.castShadow = true;
-  key.shadow.mapSize.set(512, 512);
-  key.shadow.camera.left = -16; key.shadow.camera.right = 16; key.shadow.camera.top = 16; key.shadow.camera.bottom = -16;
-  key.shadow.camera.near = 1; key.shadow.camera.far = 60;
-  key.shadow.radius = 13; key.shadow.blurSamples = 10; key.shadow.bias = -0.0006;  // soft enough, far cheaper per frame
-  scene.add(key); scene.add(key.target);
-  const fill = new THREE.DirectionalLight(0xffffff, 0.55); fill.position.set(-12, 4, 10); scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(2, 14, -6); scene.add(rim);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x9a9a9a, 0.3));
-  // a soft lamp close to the front-right gives the big faces a gentle falloff
-  const lamp = new THREE.PointLight(0xffffff, 0, 0, 2);
-  scene.add(lamp);
+  // --- light: soft studio key, fill and rim, a sky/ground fill and a close lamp for falloff on the big faces
+  const key = new THREE.DirectionalLight(0xffffff, 2.4); scene.add(key); scene.add(key.target);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.6); fill.position.set(-12, 4, 10); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xffffff, 1.0); rim.position.set(2, 14, -6); scene.add(rim);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8c8c8c, 1.15));
+  const lamp = new THREE.PointLight(0xffffff, 0, 0, 2); scene.add(lamp);
 
-  // --- wall that only catches the shadow
-  const wall = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.15 }));
-  wall.position.z = -5.2;
-  wall.receiveShadow = true;
-  scene.add(wall);
+  // --- soft shadow on the wall behind it
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shadowTexture(), transparent: true, opacity: 0.3, depthWrite: false, toneMapped: false }));
+  scene.add(shadow);
 
   // --- size + state
   let W = 0, H = 0, viewH = 1, viewW = 1, mobile = false, base = 1;
@@ -115,58 +102,63 @@ export async function initM({ section, canvas, reduce, ScrollTrigger, debugP }) 
     mobile = W / H < 0.9;
     // base scale: M as tall as the viewport on desktop, sized to the width on phones
     base = mobile ? Math.min((viewW * 0.74) / 9.4, (viewH * 0.46) / 10) : viewH / 10;
-    needs = true;
+    dirty = true;
   }
 
-  let target = 0, cur = 0, needs = true, visible = false, raf = 0;
+  let target = 0, cur = 0, dirty = true, visible = false, raf = 0;
   const fixed = debugP !== null && debugP !== undefined && debugP !== '' ? parseFloat(debugP) : null;
   if (reduce) { target = cur = 0.5; }
   if (fixed !== null) target = cur = fixed;
 
+  const kick = () => { if (!raf && visible) raf = requestAnimationFrame(frame); };
   if (!reduce && fixed === null) {
     ScrollTrigger.create({
       trigger: section, start: 'top top', end: 'bottom bottom',
-      onUpdate: (self) => { target = self.progress; needs = true; },
+      onUpdate: (self) => { target = self.progress; kick(); },
     });
     // entering and leaving: let it travel a little while the section slides in/out
     ScrollTrigger.create({
       trigger: section, start: 'top bottom', end: 'top top',
-      onUpdate: (self) => { if (self.progress < 1) { target = (self.progress - 1) * 0.18; needs = true; } },
+      onUpdate: (self) => { if (self.progress < 1) { target = (self.progress - 1) * 0.18; kick(); } },
     });
   }
 
-  const t0 = performance.now();
-  function frame(now) {
-    raf = 0;
-    const t = (now - t0) / 1000;
-    cur += (target - cur) * (reduce ? 1 : 0.085);
+  function draw() {
     const k = sample(mobile ? KEYS_MOBILE : KEYS, clamp01(cur));
-    // progress below zero (section still entering) pushes it further down
-    const extra = cur < 0 ? cur * 2.4 : 0;
-    const idle = reduce ? 0 : 1;
+    const extra = cur < 0 ? cur * 2.4 : 0;   // section still entering: push it further down
     const sc = base * k.s * (mobile ? 1 : Math.min(1, Math.max(0.78, camera.aspect / 1.6)));
     m.scale.setScalar(sc);
-    wall.position.z = -3.4 * sc;
     pivot.position.set((k.x + (mobile ? 0 : Math.max(0, 1.6 - camera.aspect) * 0.12)) * viewW * 0.5, (k.y + extra) * viewH, 0);
-    pivot.rotation.set(k.rx + Math.sin(t * 0.6) * 0.025 * idle, k.ry + Math.sin(t * 0.45) * 0.04 * idle, k.rz);
-    key.target.position.copy(pivot.position);
+    pivot.rotation.set(k.rx, k.ry, k.rz);
     key.position.set(pivot.position.x + 6, pivot.position.y + 10, 24);
+    key.target.position.copy(pivot.position);
     lamp.position.set(pivot.position.x + sc * 5, pivot.position.y + sc * 6, sc * 7);
     lamp.intensity = 260 * sc * sc;
+    // shadow: offset away from the key light, flattened by how far the M is turned
+    const z = -3.4 * sc;
+    const size = sc * 13.5;
+    shadow.position.set(pivot.position.x - sc * 1.9, pivot.position.y - sc * 2.6, z);
+    shadow.rotation.set(0, 0, k.rz);
+    shadow.scale.set(size * Math.max(0.35, Math.abs(Math.cos(k.ry))), size * Math.max(0.35, Math.abs(Math.cos(k.rx))), 1);
     renderer.render(scene, camera);
-    if (visible && !reduce) raf = requestAnimationFrame(frame);
   }
-  const start = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  function frame() {
+    raf = 0;
+    const d = target - cur;
+    cur += reduce ? d : d * 0.12;
+    if (Math.abs(target - cur) < 0.0004) cur = target;
+    draw();
+    dirty = false;
+    // keep drawing only while it is still easing towards the scroll position
+    if (visible && cur !== target) raf = requestAnimationFrame(frame);
+  }
 
-  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }, { rootMargin: '10% 0px' }).observe(section);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else if (visible) start(); });
-  window.addEventListener('resize', () => { resize(); start(); });
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && (dirty || cur !== target)) kick(); }, { rootMargin: '10% 0px' }).observe(section);
+  window.addEventListener('resize', () => { resize(); dirty = true; kick(); });
   resize();
-  // compile shaders and draw once now, in idle time, long before the section is on screen,
-  // so scrolling into it never stalls
-  await idleSlot();
-  if (renderer.compileAsync) await renderer.compileAsync(scene, camera); else renderer.compile(scene, camera);
-  await idleSlot();
-  frame(performance.now());
-  window.__m3d = { renderer, scene, camera, pivot, set p(v) { target = cur = v; start(); } };
+  // compile and draw the first frame right away: this runs while the page is still loading, so the GPU
+  // allocates everything (programs, buffers, the canvas layer) before anything is on screen or scrolling
+  renderer.compile(scene, camera);
+  draw();
+  window.__m3d = { renderer, scene, camera, pivot, set p(v) { target = cur = v; dirty = true; visible = true; kick(); } };
 }
